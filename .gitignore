@@ -3,3 +3,4 @@ results/
 checkpoints/
 test_results/
 test_results/*
+checkpoints/long_term_forecast_ETTh1_96_96_Autoformer_ETTh1_ftM_sl96_ll48_pl96_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_Exp_0/checkpoint.pth
