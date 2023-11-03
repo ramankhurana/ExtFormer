@@ -1,0 +1,5 @@
+# .gitignore content
+results/
+checkpoints/
+test_results/
+test_results/*
