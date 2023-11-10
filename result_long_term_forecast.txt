@@ -44,3 +44,9 @@ mse:0.45986589789390564, mae:0.459530770778656
 long_term_forecast_ETTh1_96_96_Autoformer_ETTh1_ftM_sl96_ll48_pl96_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_Exp_0  
 mse:0.49833983182907104, mae:0.4787253141403198
 
+long_term_forecast_Divvy_96_96_Autoformer_Divvy_ftM_sl96_ll48_pl96_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_Exp_0  
+mse:0.9629201889038086, mae:0.5822033286094666
+
+long_term_forecast_ETTh1_96_96_Autoformer_ETTh1_ftM_sl96_ll48_pl96_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_Exp_0  
+mse:0.49833983182907104, mae:0.4787253141403198
+
