@@ -721,11 +721,10 @@ class UEAloader(Dataset):
 
 
 
-
 class Dataset_divvy_hour(Dataset):
     def __init__(self, root_path, flag='train', size=None,
                  features='S', data_path='ETTh1.csv',
-                 target='OT', scale=True, timeenc=0, freq='h', train_only=False):
+                 target='OT', scale=True, timeenc=0, freq='h', seasonal_patterns=None ):
         # size [seq_len, label_len, pred_len]                                                                                                                                                                                                                                                               
         # info                                                                                                                                                                                                                                                                                              
         if size == None:
@@ -746,7 +745,7 @@ class Dataset_divvy_hour(Dataset):
         self.target = target
         self.scale = scale
         self.timeenc = timeenc
-        self.freq –= freq
+        self.freq = freq
 
         self.root_path = root_path
         self.data_path = data_path

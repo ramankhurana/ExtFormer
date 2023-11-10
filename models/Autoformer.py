@@ -135,7 +135,8 @@ class Model(nn.Module):
         if (False):print ("enc_out.shape before  embedding: ", x_enc.shape)
 
         ## Code From Raman Starts here
-        static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])
+        static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
+        
         static_raw = static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
         static_raw = static_raw.float()
         if (False): print ("shape of static_raw", static_raw.shape)
