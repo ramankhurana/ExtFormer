@@ -7,6 +7,10 @@ from layers.FourierCorrelation import FourierBlock, FourierCrossAttention
 from layers.MultiWaveletCorrelation import MultiWaveletCross, MultiWaveletTransform
 from layers.Autoformer_EncDec import Encoder, Decoder, EncoderLayer, DecoderLayer, my_Layernorm, series_decomp
 
+## added by Raman
+from layers.Embed import StaticEmbedding
+## added by Raman ends here 
+
 
 class Model(nn.Module):
     """
