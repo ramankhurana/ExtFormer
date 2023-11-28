@@ -184,14 +184,26 @@ class PatchEmbedding(nn.Module):
 
 
 class StaticEmbedding(nn.Module):
-    def __init__(self, d_inp=7, d_output=512):
+    def __init__(self, d_inp=7, d_output=512, dropout=0.2):
         super(StaticEmbedding, self).__init__()
-
         ## Linear Embedding
         self.static_embed = nn.Linear(d_inp, d_output, bias=False)
+        self.dropout = nn.Dropout(p=dropout)
+        self.relu = nn.ReLU()  # ReLU activation function
+        
+        #self.static_embedL1 = nn.Linear(d_output,256) ## start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
+        #self.static_embedL2 = nn.Linear(256,128) ## start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
+        #self.static_embedL3 = nn.Linear(128,d_inp) ## start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension 
 
     def forward(self, x):
         x = self.static_embed(x)
+        x = self.relu(x)  # Apply ReLU after linear transformation
+        x = self.dropout(x)  # Apply dropout after activation
+        print ("in forward pass of StaticEmbedding")
+        #x = self.dropout(self.relu (self.static_embedL1(x))  )
+        #x = self.dropout(self.relu (self.static_embedL2(x))  )
+        #x = self.dropout(self.relu (self.static_embedL3(x))  )
+
         return (x)
 
 
