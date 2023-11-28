@@ -26,7 +26,7 @@ class Model(nn.Module):
         self.label_len = configs.label_len
         self.pred_len = configs.pred_len
         self.output_attention = configs.output_attention
-
+        self.use_static = False 
         
         # Decomp
         kernel_size = configs.moving_avg
@@ -47,7 +47,7 @@ class Model(nn.Module):
         # 7 for ETTh1
         # start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
         # 200 for Divvy
-        if (False):
+        if (self.use_static):
 
             n_input = 200
             self.static_embeding = StaticEmbedding(n_input) 
@@ -142,7 +142,7 @@ class Model(nn.Module):
         if (False):print ("enc_out.shape before  embedding: ", x_enc.shape)
 
         ## Code From Raman Starts here
-        if (False):
+        if (self.use_static):
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
             static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
@@ -177,11 +177,9 @@ class Model(nn.Module):
         ### it is added only tot he seasonal part of the decoder output instead of total output.
         ### Adding to total output can also be tested.
 
-        if (False):
+        if (self.use_static):
             seasonal_part  = static_out + seasonal_part
             seasonal_part = self.static_embeding(seasonal_part)
-            #seasonal_part = self.static_embeding1(seasonal_part)
-            #seasonal_part = self.static_embeding2(seasonal_part)
             seasonal_part = self.static_embeding3(seasonal_part)
             seasonal_part = self.static_embeding4(seasonal_part)
             seasonal_part = self.static_embeding5(seasonal_part)
