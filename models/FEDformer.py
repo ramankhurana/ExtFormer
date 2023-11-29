@@ -6,8 +6,8 @@ from layers.AutoCorrelation import AutoCorrelationLayer
 from layers.FourierCorrelation import FourierBlock, FourierCrossAttention
 from layers.MultiWaveletCorrelation import MultiWaveletCross, MultiWaveletTransform
 from layers.Autoformer_EncDec import Encoder, Decoder, EncoderLayer, DecoderLayer, my_Layernorm, series_decomp
-
 ## added by Raman
+import numpy as np 
 from layers.Embed import StaticEmbedding
 ## added by Raman ends here 
 
@@ -32,9 +32,25 @@ class Model(nn.Module):
         self.version = version
         self.mode_select = mode_select
         self.modes = modes
+        self.use_static = True 
 
         # Decomp
         self.decomp = series_decomp(configs.moving_avg)
+
+        ## Raman code starts
+        # 7 for ETTh1
+        # start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
+        # 200 for Divvy
+        if (self.use_static):
+
+            n_input = 200
+            self.static_embeding = StaticEmbedding(n_input) 
+            #self.static_embeding3 = StaticEmbedding(512,256) 
+            #self.static_embeding4 = StaticEmbedding(256,128) 
+            #self.static_embeding5 = StaticEmbedding(128,n_input) 
+        ## Raman code ends
+
+
         self.enc_embedding = DataEmbedding(configs.enc_in, configs.d_model, configs.embed, configs.freq,
                                            configs.dropout)
         self.dec_embedding = DataEmbedding(configs.dec_in, configs.d_model, configs.embed, configs.freq,
@@ -129,6 +145,33 @@ class Model(nn.Module):
         enc_out, attns = self.encoder(enc_out, attn_mask=None)
         # dec
         seasonal_part, trend_part = self.decoder(dec_out, enc_out, x_mask=None, cross_mask=None, trend=trend_init)
+
+        # static 
+        ## Code From Raman Starts here
+        if (self.use_static):
+
+            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
+            static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+        
+            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
+            static_raw = static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
+            static_raw = static_raw.float()
+            static_out =  static_raw ## self.static_embeding(static_raw)
+        
+            ## the static_out is not yet used, it has to be embed to the temporal data and then it will be fed to the encoder 
+            ### add the static and temporal data embeddings, in a later version it can be concatinated instead of adding
+            ### it is added only tot he seasonal part of the decoder output instead of total output.
+            ### Adding to total output can also be tested.
+
+            seasonal_part  = static_out + seasonal_part
+            seasonal_part = self.static_embeding(seasonal_part)
+            #seasonal_part = self.static_embeding3(seasonal_part)
+            #seasonal_part = self.static_embeding4(seasonal_part)
+            #seasonal_part = self.static_embeding5(seasonal_part)
+            
+        ## Raman code ends here 
+
+
         # final
         dec_out = trend_part + seasonal_part
         return dec_out
