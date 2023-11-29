@@ -3,6 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from layers.Autoformer_EncDec import series_decomp
 
+## added by Raman
+import numpy as np 
+from layers.Embed import StaticEmbedding
+## added by Raman ends here 
 
 class Model(nn.Module):
     """
@@ -22,6 +26,22 @@ class Model(nn.Module):
             self.pred_len = configs.pred_len
         # Series decomposition block from Autoformer
         self.decompsition = series_decomp(configs.moving_avg)
+
+        self.use_static = True
+
+        ## Raman code starts
+        # 7 for ETTh1
+        # start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
+        # 200 for Divvy
+        if (self.use_static):
+
+            n_input = 200
+            self.static_embeding = StaticEmbedding(n_input) 
+            #self.static_embeding3 = StaticEmbedding(512,256) 
+            #self.static_embeding4 = StaticEmbedding(256,128) 
+            #self.static_embeding5 = StaticEmbedding(128,n_input) 
+        ## Raman code ends
+
         self.individual = individual
         self.channels = configs.enc_in
 
@@ -71,6 +91,38 @@ class Model(nn.Module):
         else:
             seasonal_output = self.Linear_Seasonal(seasonal_init)
             trend_output = self.Linear_Trend(trend_init)
+
+        seasonal_part = seasonal_output
+        print ("shape os seasonal data is", seasonal_part.shape)
+        # static 
+        ## Code From Raman Starts here
+        if (self.use_static):
+
+            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
+            static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+        
+            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
+            #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
+            static_raw = static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
+            static_raw = static_raw.float()
+            static_raw = static_raw.permute(0, 2, 1)
+
+            static_out =  static_raw ## self.static_embeding(static_raw)
+        ## the static_out is not yet used, it has to be embed to the temporal data and then it will be fed to the encoder 
+        ### add the static and temporal data embeddings, in a later version it can be concatinated instead of adding
+        ### it is added only tot he seasonal part of the decoder output instead of total output.
+        ### Adding to total output can also be tested.
+
+        if (self.use_static):
+            print ("shape of static data: ", static_out.shape)
+            seasonal_part  = static_out + seasonal_part
+            seasonal_part = self.static_embeding(seasonal_part.permute(0, 2, 1)) ## the permutation is needed for DLinear only 
+
+        seasonal_output = seasonal_part.permute(0,2,1)
+
+        ## Raman code ends here 
+
+        
         x = seasonal_output + trend_output
         return x.permute(0, 2, 1)
 
