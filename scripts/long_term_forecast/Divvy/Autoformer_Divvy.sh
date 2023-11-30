@@ -1,6 +1,6 @@
 export CUDA_VISIBLE_DEVICES=2
 
-model_name=Autoformer
+model_name=ExtAutoformer
 
 python -u run.py \
   --task_name long_term_forecast \
