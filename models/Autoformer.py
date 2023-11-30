@@ -51,9 +51,9 @@ class Model(nn.Module):
 
             n_input = 200
             self.static_embeding = StaticEmbedding(n_input) 
-            self.static_embeding3 = StaticEmbedding(512,256) 
-            self.static_embeding4 = StaticEmbedding(256,128) 
-            self.static_embeding5 = StaticEmbedding(128,n_input) 
+            #self.static_embeding3 = StaticEmbedding(512,256) 
+            #self.static_embeding4 = StaticEmbedding(256,128) 
+            #self.static_embeding5 = StaticEmbedding(128,n_input) 
         ## Raman code ends
 
         
@@ -178,11 +178,15 @@ class Model(nn.Module):
         ### Adding to total output can also be tested.
 
         if (self.use_static):
+            if False:
+                seasonal_part  = static_out + seasonal_part
+                seasonal_part = self.static_embeding(seasonal_part)
+            static_out = self.static_embeding(static_out) # static2
             seasonal_part  = static_out + seasonal_part
-            seasonal_part = self.static_embeding(seasonal_part)
-            seasonal_part = self.static_embeding3(seasonal_part)
-            seasonal_part = self.static_embeding4(seasonal_part)
-            seasonal_part = self.static_embeding5(seasonal_part)
+
+            #seasonal_part = self.static_embeding3(seasonal_part)
+            #seasonal_part = self.static_embeding4(seasonal_part)
+            #seasonal_part = self.static_embeding5(seasonal_part)
             
         ## Raman code ends here 
 

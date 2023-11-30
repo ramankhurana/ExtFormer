@@ -32,7 +32,7 @@ class Model(nn.Module):
         self.version = version
         self.mode_select = mode_select
         self.modes = modes
-        self.use_static = True 
+        self.use_static = False 
 
         # Decomp
         self.decomp = series_decomp(configs.moving_avg)
@@ -162,9 +162,13 @@ class Model(nn.Module):
             ### add the static and temporal data embeddings, in a later version it can be concatinated instead of adding
             ### it is added only tot he seasonal part of the decoder output instead of total output.
             ### Adding to total output can also be tested.
-
+            if False: 
+                seasonal_part  = static_out + seasonal_part
+                seasonal_part = self.static_embeding(seasonal_part)
+            
+            static_out = self.static_embeding(static_out)
             seasonal_part  = static_out + seasonal_part
-            seasonal_part = self.static_embeding(seasonal_part)
+
             #seasonal_part = self.static_embeding3(seasonal_part)
             #seasonal_part = self.static_embeding4(seasonal_part)
             #seasonal_part = self.static_embeding5(seasonal_part)
