@@ -104,7 +104,7 @@ class AutoCorrelation(nn.Module):
         _, S, _, D = values.shape
         if L > S:
             zeros = torch.zeros_like(queries[:, :(L - S), :]).float()
-            print ("shape of values and zeros in time_delay_agg_full: ", values.shape, zeros.shape)
+            #print ("shape of values and zeros in time_delay_agg_full: ", values.shape, zeros.shape)
             values = torch.cat([values, zeros], dim=1)
             keys = torch.cat([keys, zeros], dim=1)
         else:

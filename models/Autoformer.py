@@ -9,7 +9,7 @@ import numpy as np
 
 
 ## added by Raman
-from layers.Embed import StaticEmbedding
+from layers.Embed import StaticEmbedding, CombineOutputs
 ## added by Raman ends here 
 
 class Model(nn.Module):
@@ -26,8 +26,14 @@ class Model(nn.Module):
         self.label_len = configs.label_len
         self.pred_len = configs.pred_len
         self.output_attention = configs.output_attention
-        self.use_static = False 
-        
+        self.use_static = True 
+
+        self.static1 = False 
+        self.static2 = False
+        self.static4 = True
+        self.static6 = False  
+        self.static7 = False
+        self.static8 = False 
         # Decomp
         kernel_size = configs.moving_avg
         self.decomp = series_decomp(kernel_size)
@@ -50,10 +56,16 @@ class Model(nn.Module):
         if (self.use_static):
 
             n_input = 200
+            self.autoformer_output_dim = n_input
+            self.static_output_dim = n_input
             self.static_embeding = StaticEmbedding(n_input) 
             #self.static_embeding3 = StaticEmbedding(512,256) 
             #self.static_embeding4 = StaticEmbedding(256,128) 
             #self.static_embeding5 = StaticEmbedding(128,n_input) 
+
+            # concat the output of autoformer and static data using a concat layer which will correct the dimension 
+            self.combiner = CombineOutputs(self.autoformer_output_dim, self.static_output_dim )
+
         ## Raman code ends
 
         
@@ -125,8 +137,8 @@ class Model(nn.Module):
                              x_dec.shape[2]], device=x_enc.device)
         seasonal_init, trend_init = self.decomp(x_enc)
         
-        print ("size of trend_init before concating the zeros/mean: ", seasonal_init.shape, trend_init.shape)
-        print ("size of mean and zeros : ",mean.shape, zeros.shape)
+        #print ("size of trend_init before concating the zeros/mean: ", seasonal_init.shape, trend_init.shape)
+        #print ("size of mean and zeros : ",mean.shape, zeros.shape)
         
         # decoder input
         trend_init = torch.cat(
@@ -141,28 +153,9 @@ class Model(nn.Module):
         # enc
         if (False):print ("enc_out.shape before  embedding: ", x_enc.shape)
 
-        ## Code From Raman Starts here
-        if (self.use_static):
-
-            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
-            static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
-        
-            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
-            static_raw = static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
-            static_raw = static_raw.float()
-            static_out =  static_raw ## self.static_embeding(static_raw)
-        ## the static_out is not yet used, it has to be embed to the temporal data and then it will be fed to the encoder 
-        ## Code from Raman ends here 
-
-
-
-        
 
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
         enc_out, attns = self.encoder(enc_out, attn_mask=None)
-
-
-
         
         
         # dec
@@ -177,12 +170,41 @@ class Model(nn.Module):
         ### it is added only tot he seasonal part of the decoder output instead of total output.
         ### Adding to total output can also be tested.
 
+        ## Code From Raman Starts here
         if (self.use_static):
-            if False:
+
+            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
+            static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+        
+            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
+            static_raw = static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
+            static_raw = static_raw.float()
+            static_out =  static_raw ## self.static_embeding(static_raw)
+
+        if (self.use_static):
+            if self.static1:
+                print ("This is now running for staitc1")
+
+                # this is static 1
+                #seasonal_part_orig = seasonal_part
+                print ("shapes=---------",static_out.shape, seasonal_part.shape)
                 seasonal_part  = static_out + seasonal_part
                 seasonal_part = self.static_embeding(seasonal_part)
-            static_out = self.static_embeding(static_out) # static2
-            seasonal_part  = static_out + seasonal_part
+
+                # this is static 8: residual connection 
+                #seasonal_part = seasonal_part + seasonal_part_orig
+            if self.static2: 
+                print ("This is now running for staitc2")
+
+                static_out = self.static_embeding(static_out) # static2
+                seasonal_part  = static_out + seasonal_part 
+
+            if self.static6: 
+                print ("static_out.shape: ", static_out.shape)
+
+                static_out = self.static_embeding(static_out)
+                print ("static_out.shape: ", static_out.shape)
+                seasonal_part = self.combiner(seasonal_part, static_out) # static 6
 
             #seasonal_part = self.static_embeding3(seasonal_part)
             #seasonal_part = self.static_embeding4(seasonal_part)
@@ -191,10 +213,39 @@ class Model(nn.Module):
         ## Raman code ends here 
 
         
-        if (False): print ("result of decoder: ", seasonal_part.shape, trend_part.shape)
-        # final
+        # final this is needed for static 1, static 2 
+        #dec_out = trend_part + seasonal_part
+
+
+        ## Raman code starts here 
+        if (self.static4 & self.use_static ):
+            print ("This is now running for staitc4")
+            ## static3 
+            #dec_out  = static_out + dec_out
+            #dec_out = self.static_embeding(dec_out)
+
+            ## static 4
+            ### For static 7, trend and season should be after adding the static part, 
+            ### comment from top and uncoment from bottom
+            #seasonal_part_orig = seasonal_part   ## static 7
+            seasonal_part = self.combiner(seasonal_part, static_out) # static 4
+            seasonal_part = self.static_embeding(seasonal_part)
+            #seasonal_part = seasonal_part_orig + seasonal_part  ## static 7 
+            #dec_out = trend_part + seasonal_part
+
+        ## Raman code starts here 
+        if (self.static7 & self.use_static ):
+            print ("This is now running for staitc7")
+
+            seasonal_part_orig = seasonal_part   ## static 7
+            seasonal_part = self.combiner(seasonal_part, static_out) # static 4
+            seasonal_part = self.static_embeding(seasonal_part)
+            seasonal_part = seasonal_part_orig + seasonal_part  ## static 7 
+            #dec_out = trend_part + seasonal_part
+
+        ## Raman code ends here
         dec_out = trend_part + seasonal_part
-        if (False): print ("final result: ", dec_out.shape)
+        
         return dec_out
 
     def imputation(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask):

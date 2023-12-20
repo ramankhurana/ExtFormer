@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils import weight_norm
 import math
-
+import numpy as np
 
 class PositionalEmbedding(nn.Module):
     def __init__(self, d_model, max_len=5000):
@@ -196,11 +196,11 @@ class StaticEmbedding(nn.Module):
         self.static_embedL3 = nn.Linear(128,d_inp) ## start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension 
 
     def forward(self, x):
-        print ("size of x in StaticEmbedding", x.shape)
+        #print ("size of x in StaticEmbedding", x.shape)
         x = self.static_embed(x)
         x = self.relu(x)  # Apply ReLU after linear transformation
         x = self.dropout(x)  # Apply dropout after activation
-        print ("in forward pass of StaticEmbedding")
+        #print ("in forward pass of StaticEmbedding")
         x = self.dropout(self.relu (self.static_embedL1(x))  )
         x = self.dropout(self.relu (self.static_embedL2(x))  )
         x = self.dropout(self.relu (self.static_embedL3(x))  )
@@ -219,16 +219,16 @@ class CombineOutputs(nn.Module):
         self.dimension_match = nn.Linear( autoformer_dim + static_dim, autoformer_dim ) 
 
     def forward(self, autoformer_output, static_output):
-        print ("shape of autoformer_output:", autoformer_output.shape)
-        print ("shape of static_output:", static_output.shape)
+        #print ("shape of autoformer_output:", autoformer_output.shape)
+        #print ("shape of static_output:", static_output.shape)
   
         if self.mode==1:
             combined_output = autoformer_output + static_output
         if self.mode==2:
-            print ("this is in the mode 2")
+            #print ("this is in the mode 2")
             combined_output = torch.cat((autoformer_output, static_output), dim=-1)
             
-            print ("shape of combined_output:", combined_output.shape)
+            #print ("shape of combined_output:", combined_output.shape)
 
             self.dimension_match(combined_output)
         return self.dimension_match(combined_output)
@@ -237,5 +237,44 @@ class CombineOutputs(nn.Module):
 
     
 
+## Bandpass filter for HybridTS
+class BandPassFilter(nn.Module):
+    def __init__(self, low_freq=10, high_freq=1000 ):
+        super(BandPassFilter, self).__init__()
+        # Initialize parameters for band-pass filter here, if needed
+        self.low_freq = low_freq
+        self.high_freq = high_freq
 
+    def fourier_transform(self, x):
+        # Apply Fourier transform
+        # Assuming x is a numpy array. 
+        # If x is a tensor, convert it 
+        # to numpy array before applying fft
+        return np.fft.fft(x)
 
+    def apply_filter(self, freq_components):
+        # Implement band-pass filter logic here
+        # This is a placeholder implementation. 
+        # You should replace it with your actual filter logic.
+        # Example: Zero out components not within the desired 
+        # frequency range
+        filtered_freq_components = np.copy(freq_components)
+        # Define your frequency range
+        #print ("frequency range: ", freq_components.shape[1])
+        #freq_range = np.arange(freq_components.shape[1])
+        #mask = (freq_range < self.low_freq) | (freq_range > self.high_freq)
+        #filtered_freq_components[:, mask] = 0
+        return filtered_freq_components
+
+    def forward(self, x):
+        # Check if input is a tensor, convert to numpy array for fft
+        if isinstance(x, torch.Tensor):
+            x = x.numpy()
+        freq_components = self.fourier_transform(x)
+        filtered_output = self.apply_filter(freq_components)
+        #print ("filtered_output in Bandpass filter *******************: ", filtered_output)
+        # Convert back to tensor for further processing in PyTorch
+        return torch.from_numpy(filtered_output)
+
+# check the freq vs amplitude for the time series, 
+# see which freq have high amplitudes. 

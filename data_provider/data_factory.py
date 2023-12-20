@@ -1,5 +1,5 @@
 from data_provider.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_M4, PSMSegLoader, \
-    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader, Dataset_divvy_hour
+    MSLSegLoader, SMAPSegLoader, SMDSegLoader, SWATSegLoader, UEAloader, Dataset_divvy_hour, Dataset_M5_daily
 from data_provider.uea import collate_fn
 from torch.utils.data import DataLoader
 
@@ -16,7 +16,8 @@ data_dict = {
     'SMD': SMDSegLoader,
     'SWAT': SWATSegLoader,
     'UEA': UEAloader,
-    'Divvy': Dataset_divvy_hour
+    'Divvy': Dataset_divvy_hour, 
+    'M5': Dataset_M5_daily
 }
 
 
@@ -35,6 +36,7 @@ def data_provider(args, flag):
             batch_size = args.batch_size #1  # bsz=1 for evaluation
         freq = args.freq
     else:
+        print (" in train for valid with values", )
         shuffle_flag = True
         drop_last = True
         batch_size = args.batch_size  # bsz for train and valid
