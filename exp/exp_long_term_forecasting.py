@@ -77,6 +77,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         return total_loss
 
     def train(self, setting):
+        print ("arguments in train function",self.args)
         train_data, train_loader = self._get_data(flag='train')
         vali_data, vali_loader = self._get_data(flag='val')
         test_data, test_loader = self._get_data(flag='test')
@@ -164,6 +165,13 @@ class Exp_Long_Term_Forecast(Exp_Basic):
             train_loss = np.average(train_loss)
             vali_loss = self.vali(vali_data, vali_loader, criterion)
             test_loss = self.vali(test_data, test_loader, criterion)
+
+            ## check the size : to be removed 
+            #first_batch, _ = next(iter(vali_loader))
+            # The shape of the first batch gives you the shape per batch
+            #batch_shape = first_batch.shape
+            #print ("test and vali shape",batch_shape )
+            ## above code to be removed 
 
             print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Test Loss: {4:.7f}".format(
                 epoch + 1, train_steps, train_loss, vali_loss, test_loss))
@@ -258,7 +266,10 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         f.write('\n')
         f.close()
 
-        np.save(folder_path + 'metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
+        prefix = self.args.model + "_" + self.args.data + "_" + self.args.model_id + "_" + self.args.static 
+        print ("prefix: ", prefix) 
+
+        np.save(folder_path + prefix+'_metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
         np.save(folder_path + 'pred.npy', preds)
         np.save(folder_path + 'true.npy', trues)
 

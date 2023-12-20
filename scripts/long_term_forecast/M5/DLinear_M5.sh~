@@ -1,15 +1,15 @@
 export CUDA_VISIBLE_DEVICES=2
 
-model_name=Autoformer
+model_name=FEDformer
 
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
-  --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
-  --model_id Divvy_96_96 \
+  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/M5/ \
+  --data_path sales_columns.csv \
+  --model_id M5_96_96 \
   --model $model_name \
-  --data Divvy \
+  --data M5 \
   --features M \
   --seq_len 96 \
   --label_len 48 \
@@ -21,7 +21,8 @@ python -u run.py \
   --dec_in 200 \
   --c_out 200 \
   --des 'Exp' \
-  --itr 1
+  --itr 1 \
+  --static NONE
 
 #python -u run.py \
 #  --task_name long_term_forecast \

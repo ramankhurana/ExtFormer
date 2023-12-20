@@ -5,7 +5,7 @@ from layers.Autoformer_EncDec import series_decomp
 
 ## added by Raman
 import numpy as np 
-from layers.Embed import StaticEmbedding
+from layers.Embed import StaticEmbedding, CombineOutputs
 ## added by Raman ends here 
 
 class Model(nn.Module):
@@ -28,6 +28,13 @@ class Model(nn.Module):
         self.decompsition = series_decomp(configs.moving_avg)
 
         self.use_static = True
+        self.static1    = configs.static=="static1"
+        self.static2    = configs.static=="static2"
+        self.static4    = configs.static=="static4"
+        self.static6    = configs.static=="static6"
+        self.static7    = configs.static=="static7"
+
+        print ("self.static1, self.static2, self.static4, self.static6, self.static7", self.static1, self.static2, self.static4, self.static6, self.static7)
 
         ## Raman code starts
         # 7 for ETTh1
@@ -35,11 +42,20 @@ class Model(nn.Module):
         # 200 for Divvy
         if (self.use_static):
 
+            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
+            self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
+            #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.float()
+            self.static_raw = self.static_raw.permute(0, 2, 1)
             n_input = 200
+            self.DLinear_output_dim = n_input
+            self.static_output_dim = n_input
+            ## model 
             self.static_embeding = StaticEmbedding(n_input) 
-            #self.static_embeding3 = StaticEmbedding(512,256) 
-            #self.static_embeding4 = StaticEmbedding(256,128) 
-            #self.static_embeding5 = StaticEmbedding(128,n_input) 
+            self.combiner = CombineOutputs(self.DLinear_output_dim, self.static_output_dim )
+
         ## Raman code ends
 
         self.individual = individual
@@ -93,32 +109,50 @@ class Model(nn.Module):
             trend_output = self.Linear_Trend(trend_init)
 
         seasonal_part = seasonal_output
-        print ("shape os seasonal data is", seasonal_part.shape)
+        print ("shape of seasonal data is", seasonal_part.shape)
         # static 
         ## Code From Raman Starts here
-        if (self.use_static):
+        if (self.static4 & self.use_static ):
+            print ("This is now running for staitc4")
+            static_out =   self.static_raw
+            seasonal_part = self.combiner(seasonal_part.permute(0,2,1), static_out.permute(0,2,1) ) # static 4
+            seasonal_part = self.static_embeding(seasonal_part)
+            seasonal_output = seasonal_part.permute(0,2,1)
 
-            # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
-            static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
-        
-            #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
-            #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
-            static_raw = static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
-            static_raw = static_raw.float()
-            static_raw = static_raw.permute(0, 2, 1)
-
-            static_out =  static_raw ## self.static_embeding(static_raw)
-        ## the static_out is not yet used, it has to be embed to the temporal data and then it will be fed to the encoder 
-        ### add the static and temporal data embeddings, in a later version it can be concatinated instead of adding
-        ### it is added only tot he seasonal part of the decoder output instead of total output.
-        ### Adding to total output can also be tested.
-
-        if (self.use_static):
-            print ("shape of static data: ", static_out.shape)
+        if (self.static1 & self.use_static ):
+            print ("This is now running for staitc1")
+            static_out =   self.static_raw
+            print ("shapes=---------",static_out.shape, seasonal_part.shape)
             seasonal_part  = static_out + seasonal_part
-            seasonal_part = self.static_embeding(seasonal_part.permute(0, 2, 1)) ## the permutation is needed for DLinear only 
+            seasonal_part = self.static_embeding(seasonal_part.permute(0,2,1))
+            seasonal_output = seasonal_part.permute(0,2,1)
 
-        seasonal_output = seasonal_part.permute(0,2,1)
+        if (self.static2 & self.use_static ):
+            print ("This is now running for staitc2")
+            static_out =   self.static_raw
+            print ("shapes=---------",static_out.shape, seasonal_part.shape)
+            static_out = self.static_embeding(static_out.permute(0,2,1)) 
+            seasonal_part  = static_out.permute(0,2,1) + seasonal_part 
+            seasonal_output = seasonal_part
+
+
+        if self.static6 & self.use_static: 
+            print ("This is now running for staitc6")
+
+            static_out =   self.static_raw
+            static_out = self.static_embeding(static_out.permute(0,2,1))
+            seasonal_part = self.combiner(seasonal_part.permute(0,2,1), static_out) # static 6
+            seasonal_output = seasonal_part
+
+
+        if (self.static7 & self.use_static ):
+            print ("This is now running for staitc7")
+            static_out =   self.static_raw
+            seasonal_part_orig = seasonal_part  
+            seasonal_part = self.combiner(seasonal_part.permute(0,2,1), static_out.permute(0,2,1)) 
+            seasonal_part = self.static_embeding(seasonal_part)
+            seasonal_part = seasonal_part_orig + seasonal_part.permute(0,2,1)
+            seasonal_output = seasonal_part
 
         ## Raman code ends here 
 
