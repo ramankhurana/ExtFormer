@@ -8,7 +8,7 @@ from layers.MultiWaveletCorrelation import MultiWaveletCross, MultiWaveletTransf
 from layers.Autoformer_EncDec import Encoder, Decoder, EncoderLayer, DecoderLayer, my_Layernorm, series_decomp
 ## added by Raman
 import numpy as np 
-from layers.Embed import StaticEmbedding
+from layers.Embed import StaticEmbedding, CombineOutputs
 ## added by Raman ends here 
 
 
@@ -33,7 +33,7 @@ class Model(nn.Module):
         self.mode_select = mode_select
         self.modes = modes
 
-        self.use_static = False
+        self.use_static = True
         self.static1    = configs.static=="static1"
         self.static2    = configs.static=="static2"
         self.static4    = configs.static=="static4"
@@ -55,10 +55,10 @@ class Model(nn.Module):
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
             self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
-            #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
-            self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
+            #self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
-            self.static_raw = self.static_raw.permute(0, 2, 1)
+            #self.static_raw = self.static_raw.permute(0, 2, 1)
             n_input = 200
             self.DLinear_output_dim = n_input
             self.static_output_dim = n_input
