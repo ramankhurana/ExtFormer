@@ -270,8 +270,8 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         print ("prefix: ", prefix) 
 
         np.save(folder_path + prefix+'_metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
-        np.save(folder_path + 'pred.npy', preds)
-        np.save(folder_path + 'true.npy', trues)
+        np.save(folder_path + prefix+'pred.npy', preds)
+        np.save(folder_path + prefix+'true.npy', trues)
 
         return
 

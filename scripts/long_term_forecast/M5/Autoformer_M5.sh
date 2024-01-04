@@ -22,7 +22,7 @@ python -u run.py \
   --c_out 1000 \
   --des 'Exp' \
   --itr 1 \
-  --static NONE
+  --static static7
 
 #python -u run.py \
 #  --task_name long_term_forecast \

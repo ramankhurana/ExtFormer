@@ -63,15 +63,19 @@ class Model(nn.Module):
         if (self.use_static):
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
-            self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
-        
+            
+            ### this is for Divvy bikes 
+            #self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            
+            self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
+
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             self.static_raw = self.static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
 
 
 
-            n_input = 200
+            n_input = 1000
             self.autoformer_output_dim = n_input
             self.static_output_dim = n_input
             self.static_embeding = StaticEmbedding(n_input) 
@@ -204,8 +208,9 @@ class Model(nn.Module):
                 seasonal_part  = static_out + seasonal_part 
 
             if self.static6: 
-                print ("static_out.shape: ", static_out.shape)
                 static_out =  self.static_raw 
+                print ("static_out.shape: ", static_out.shape)
+
 
                 static_out = self.static_embeding(static_out)
                 print ("static_out.shape: ", static_out.shape)
