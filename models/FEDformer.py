@@ -53,13 +53,15 @@ class Model(nn.Module):
         if (self.use_static):
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
-            self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            #self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
+
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             self.static_raw = self.static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
             #self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
             #self.static_raw = self.static_raw.permute(0, 2, 1)
-            n_input = 200
+            n_input = 1000
             self.DLinear_output_dim = n_input
             self.static_output_dim = n_input
             ## model 
@@ -207,7 +209,7 @@ class Model(nn.Module):
 
         # static 
         ## Code From Raman Starts here
-        if (self.use_static):
+        if (False):
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
             static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
