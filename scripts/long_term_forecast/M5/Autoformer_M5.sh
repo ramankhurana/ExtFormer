@@ -1,3 +1,4 @@
+#!/bin/sh
 export CUDA_VISIBLE_DEVICES=2
 
 model_name=Autoformer
