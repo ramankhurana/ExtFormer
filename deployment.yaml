@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: extformer-deployment
+  namespace: kafka-flink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     app: extformer
+  template:
+    metadata:
+      labels:
+        app: extformer
+    spec:
+      containers:
+      - name: extformer
+        image: extformer-image:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SCRIPT_NAME
+          value: "Autoformer_M5.sh"
+
