@@ -1,0 +1,5 @@
+## docker running status 
+docker ps
+
+
+## create docker image
