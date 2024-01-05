@@ -253,7 +253,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         print('test shape:', preds.shape, trues.shape)
 
         # result save
-        folder_path = './results/' + setting + '/'
+        folder_path = '/nfs/home/khurana/dataset/results/' + setting + '/' # for k8 
+        folder_path = '.results/' + setting + '/' # for local 
+
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
