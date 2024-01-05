@@ -6,7 +6,7 @@ model_name=Autoformer
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/M5/ \
+  --root_path /nfs/home/khurana/dataset/M5/ \
   --data_path sales_1000_Random_columns.csv \
   --model_id M5_96_96 \
   --model $model_name \
