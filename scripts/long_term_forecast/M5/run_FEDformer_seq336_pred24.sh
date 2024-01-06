@@ -8,13 +8,13 @@ python -u run.py \
   --is_training 1 \
   --root_path /nfs/home/khurana/dataset/M5/ \
   --data_path sales_1000_Random_columns.csv \
-  --model_id M5_SEQ_LEN_PRED_LEN \
+  --model_id M5_336_24 \
   --model $model_name \
   --data M5 \
   --features M \
-  --seq_len SEQ_LEN \
+  --seq_len 336 \
   --label_len 48 \
-  --pred_len PRED_LEN \
+  --pred_len 24 \
   --e_layers 2 \
   --d_layers 1 \
   --factor 3 \
@@ -32,13 +32,13 @@ python -u run.py \
   --is_training 1 \
   --root_path /nfs/home/khurana/dataset/M5/ \
   --data_path sales_1000_Random_columns.csv \
-  --model_id M5_SEQ_LEN_PRED_LEN \
+  --model_id M5_336_24 \
   --model $model_name \
   --data M5 \
   --features M \
-  --seq_len SEQ_LEN \
+  --seq_len 336 \
   --label_len 48 \
-  --pred_len PRED_LEN \
+  --pred_len 24 \
   --e_layers 2 \
   --d_layers 1 \
   --factor 3 \
