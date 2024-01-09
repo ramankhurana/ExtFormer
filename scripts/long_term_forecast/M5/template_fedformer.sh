@@ -13,7 +13,7 @@ python -u run.py \
   --data M5 \
   --features M \
   --seq_len SEQ_LEN \
-  --label_len 48 \
+  --label_len LABEL_LEN \
   --pred_len PRED_LEN \
   --e_layers 2 \
   --d_layers 1 \
@@ -37,7 +37,7 @@ python -u run.py \
   --data M5 \
   --features M \
   --seq_len SEQ_LEN \
-  --label_len 48 \
+  --label_len LABEL_LEN \
   --pred_len PRED_LEN \
   --e_layers 2 \
   --d_layers 1 \

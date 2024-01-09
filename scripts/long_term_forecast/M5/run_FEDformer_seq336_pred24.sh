@@ -13,7 +13,7 @@ python -u run.py \
   --data M5 \
   --features M \
   --seq_len 336 \
-  --label_len 48 \
+  --label_len 12 \
   --pred_len 24 \
   --e_layers 2 \
   --d_layers 1 \
@@ -37,7 +37,7 @@ python -u run.py \
   --data M5 \
   --features M \
   --seq_len 336 \
-  --label_len 48 \
+  --label_len 12 \
   --pred_len 24 \
   --e_layers 2 \
   --d_layers 1 \

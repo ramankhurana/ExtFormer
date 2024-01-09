@@ -103,7 +103,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
             self.model.train()
             epoch_time = time.time()
-            print ("number of batches: ", len(train_loader) )
+            print ("number of batches: ", len(train_loader) , train_loader)
             for i, (batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(train_loader):
                 print ("iteration on batch number: ", iter_count)
 
@@ -137,6 +137,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     if self.args.output_attention:
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
                     else:
+                        print ("shapes: ",batch_x.shape, batch_x_mark.shape, dec_inp.shape, batch_y_mark.shape )
                         outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
                     f_dim = -1 if self.args.features == 'MS' else 0

@@ -906,6 +906,7 @@ class Dataset_M5_daily(Dataset):
         return seq_x, seq_y, seq_x_mark, seq_y_mark
 
     def __len__(self):
+        print ("length of data_x in __len__", len(self.data_x), self.seq_len, self.pred_len,len(self.data_y), len(self.data_stamp) )
         return len(self.data_x) - self.seq_len - self.pred_len + 1
 
     def inverse_transform(self, data):
