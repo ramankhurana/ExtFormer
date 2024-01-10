@@ -39,7 +39,7 @@ class Model(nn.Module):
         self.static4    = configs.static=="static4"
         self.static6    = configs.static=="static6"
         self.static7    = configs.static=="static7"
-
+        self.repeat_freq = self.pred_len + self.label_len
 
         # Decomp
         self.decomp = series_decomp(configs.moving_avg)
@@ -51,13 +51,16 @@ class Model(nn.Module):
         # start with default parameters 7, 512 in the begining, this is matched with the temporal embed data dimension
         # 200 for Divvy
         if (self.use_static):
+            print ("pred_len, label_len", self.pred_len, self.label_len, self.pred_len + self.label_len)
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
             #self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
             self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
-            self.static_raw = self.static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
+            
+            #self.static_raw = self.static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.repeat((32,self.repeat_freq,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
             #self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
             #self.static_raw = self.static_raw.permute(0, 2, 1)

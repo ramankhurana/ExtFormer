@@ -226,9 +226,11 @@ class CombineOutputs(nn.Module):
             combined_output = autoformer_output + static_output
         if self.mode==2:
             #print ("this is in the mode 2")
+            
+            print ("shape of combined_output:", static_output.shape, autoformer_output.shape)
+
             combined_output = torch.cat((autoformer_output, static_output), dim=-1)
             
-            #print ("shape of combined_output:", combined_output.shape)
 
             self.dimension_match(combined_output)
         return self.dimension_match(combined_output)
