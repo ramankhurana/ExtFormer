@@ -1,10 +1,11 @@
 #!/bin/bash
 
-seq_len_values=(12 24 48 96 192 336)
+pred_len_values=(12 24 48 96 144 192 336 720)
+seq_len_values=(12 24 48 96 192)
 
 for seq_len_value in "${seq_len_values[@]}"
 do
-    for pred_len_value in "${seq_len_values[@]}"
+    for pred_len_value in "${pred_len_values[@]}"
     do
         if [ $pred_len_value -le $seq_len_value ]; then
             script_name="run_${model_name}_seq${seq_len_value}_pred${pred_len_value}.sh"
