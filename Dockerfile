@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Make the shell script executable
 RUN echo "changing permission"
-RUN chmod +x scripts/long_term_forecast/$DIR_NAME/*.sh
+RUN chmod +x scripts/long_term_forecast/*/*.sh
 
 RUN echo "running the code"
 # Command to execute the shell script
