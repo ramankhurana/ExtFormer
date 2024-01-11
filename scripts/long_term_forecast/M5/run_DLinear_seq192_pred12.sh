@@ -1,7 +1,7 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES=2
 
-model_name=FEDformer
+model_name=DLinear
 
 python -u run.py \
   --task_name long_term_forecast \

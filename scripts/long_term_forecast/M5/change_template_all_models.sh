@@ -21,7 +21,7 @@ do
                 fi
 
                 # Use sed to replace SEQ_LEN, PRED_LEN, LABEL_LEN, and MODEL_NAME in the template
-                sed -e "s/SEQ_LEN/${seq_len_value}/g" -e "s/PRED_LEN/${pred_len_value}/g" -e "s/LABEL_LEN/${label_len_value}/g" -e "s/MODEL_NAME/${model_name}/g" template_fedformer.sh > $script_name
+                sed -e "s/SEQ_LEN/${seq_len_value}/g" -e "s/PRED_LEN/${pred_len_value}/g" -e "s/LABEL_LEN/${label_len_value}/g" -e "s/MODEL_NAME/${model_name}/g" template_model.sh > $script_name
                 chmod +x $script_name
             fi
         done
