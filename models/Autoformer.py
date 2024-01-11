@@ -33,6 +33,7 @@ class Model(nn.Module):
         self.static4    = configs.static=="static4"
         self.static6    = configs.static=="static6"
         self.static7    = configs.static=="static7"
+        self.repeat_freq = self.pred_len + self.label_len
 
         # Decomp
         kernel_size = configs.moving_avg
@@ -70,7 +71,9 @@ class Model(nn.Module):
             self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
-            self.static_raw = self.static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.repeat((32,self.repeat_freq,1))   ## for input it should 96, for output it should be 144 
+            #self.static_raw = self.static_raw.repeat((32,144,1))   ## for input it should 96, for output it should be 144 
+
             self.static_raw = self.static_raw.float()
 
 

@@ -1,3 +1,6 @@
+## This docker file needs two inputs from environment; directory name and bash script name
+## This is provided via k8 job yaml file
+
 # python image used for Extformer
 FROM python:3.9.18
 
@@ -18,11 +21,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Make the shell script executable
 RUN echo "changing permission"
-RUN chmod +x scripts/long_term_forecast/M5/*.sh
+RUN chmod +x scripts/long_term_forecast/$DIR_NAME/*.sh
 
 RUN echo "running the code"
 # Command to execute the shell script
-CMD ./scripts/long_term_forecast/M5/$SCRIPT_NAME
+CMD ./scripts/long_term_forecast/$DIR_NAME/$SCRIPT_NAME
 
 
 

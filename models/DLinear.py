@@ -48,7 +48,9 @@ class Model(nn.Module):
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
-            self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
+            
+            #self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
+            self.static_raw = self.static_raw.repeat((32,self.pred_len,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
             self.static_raw = self.static_raw.permute(0, 2, 1)
             n_input = 1000
