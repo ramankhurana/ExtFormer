@@ -18,9 +18,9 @@ python -u run.py \
   --e_layers 2 \
   --d_layers 1 \
   --factor 3 \
-  --enc_in 1000 \
-  --dec_in 1000 \
-  --c_out 1000 \
+  --enc_in 200 \
+  --dec_in 200 \
+  --c_out 200 \
   --des 'Exp' \
   --itr 1 \
   --static NONE
@@ -42,9 +42,9 @@ python -u run.py \
   --e_layers 2 \
   --d_layers 1 \
   --factor 3 \
-  --enc_in 1000 \
-  --dec_in 1000 \
-  --c_out 1000 \
+  --enc_in 200 \
+  --dec_in 200 \
+  --c_out 200 \
   --des 'Exp' \
   --itr 1 \
   --static static4
