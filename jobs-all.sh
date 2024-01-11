@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR_NAME=M5
+DIR_NAME=Divvy
 
 #for script_name in Autoformer_M5.sh DLinear_M5.sh FedFormer_M5.sh; do
 for script_name in run_FEDformer_seq12_pred12.sh run_FEDformer_seq192_pred12.sh run_FEDformer_seq192_pred144.sh run_FEDformer_seq192_pred192.sh run_FEDformer_seq192_pred24.sh run_FEDformer_seq192_pred48.sh run_FEDformer_seq192_pred96.sh run_FEDformer_seq24_pred12.sh run_FEDformer_seq24_pred24.sh run_FEDformer_seq48_pred12.sh run_FEDformer_seq48_pred24.sh run_FEDformer_seq48_pred48.sh run_FEDformer_seq96_pred12.sh run_FEDformer_seq96_pred24.sh run_FEDformer_seq96_pred48.sh run_FEDformer_seq96_pred96.sh; do
@@ -27,6 +27,7 @@ spec:
       - name: extformer
         image: ramankhurana/extformer-image:latest
         #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources:
           requests:
             memory: "11Gi"

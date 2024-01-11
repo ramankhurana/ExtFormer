@@ -5,7 +5,7 @@ model_name=DLinear
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \
@@ -27,7 +27,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \
@@ -50,7 +50,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \
@@ -73,7 +73,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \
@@ -96,7 +96,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \
@@ -119,7 +119,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path ../../JupyterNotebooks/Comparison_Multivariate/dataset/DivvyBikes/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_96_96 \
   --model $model_name \

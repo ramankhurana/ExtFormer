@@ -6,7 +6,7 @@ model_name=Autoformer
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path /nfs/home/khurana/dataset/Divvy/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path sales_1000_Random_columns.csv \
   --model_id Divvy_24_12 \
   --model $model_name \
@@ -30,7 +30,7 @@ python -u run.py \
 python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
-  --root_path /nfs/home/khurana/dataset/Divvy/ \
+  --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
   --data_path sales_1000_Random_columns.csv \
   --model_id Divvy_24_12 \
   --model $model_name \
