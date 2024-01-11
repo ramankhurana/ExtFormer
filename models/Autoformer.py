@@ -26,6 +26,8 @@ class Model(nn.Module):
         self.label_len = configs.label_len
         self.pred_len = configs.pred_len
         self.output_attention = configs.output_attention
+        self.data = configs.data 
+
         self.use_static = True 
 
         self.static1    = configs.static=="static1"
@@ -66,9 +68,10 @@ class Model(nn.Module):
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
             
             ### this is for Divvy bikes 
-            #self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
-            
-            self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
+            if self.data == "Divvy":
+                self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            if self.data == "M5":
+                self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             self.static_raw = self.static_raw.repeat((32,self.repeat_freq,1))   ## for input it should 96, for output it should be 144 

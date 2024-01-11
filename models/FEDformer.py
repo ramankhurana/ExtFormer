@@ -40,7 +40,7 @@ class Model(nn.Module):
         self.static6    = configs.static=="static6"
         self.static7    = configs.static=="static7"
         self.repeat_freq = self.pred_len + self.label_len
-
+        self.data       = configs.data
         # Decomp
         self.decomp = series_decomp(configs.moving_avg)
 
@@ -54,8 +54,10 @@ class Model(nn.Module):
             print ("pred_len, label_len", self.pred_len, self.label_len, self.pred_len + self.label_len)
 
             # static_raw = torch.tensor([1, 1, 2, 1, 2, 2, 1])   ## synthetic data for ETTh1 
-            #self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
-            self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
+            if self.data == "Divvy":
+                self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
+            if self.data == "M5":
+                self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             
