@@ -216,12 +216,10 @@ class CombineOutputs(nn.Module):
     def __init__(self, autoformer_dim, static_dim,mode=2):
         super(CombineOutputs, self).__init__()
         self.mode=mode
+        print ("shapes in the CombineOutputs __init__", autoformer_dim + static_dim, autoformer_dim)
         self.dimension_match = nn.Linear( autoformer_dim + static_dim, autoformer_dim ) 
 
-    def forward(self, autoformer_output, static_output):
-        #print ("shape of autoformer_output:", autoformer_output.shape)
-        #print ("shape of static_output:", static_output.shape)
-  
+    def forward(self, autoformer_output, static_output):  
         if self.mode==1:
             combined_output = autoformer_output + static_output
         if self.mode==2:
@@ -230,7 +228,8 @@ class CombineOutputs(nn.Module):
             print ("shape of combined_output:", static_output.shape, autoformer_output.shape)
 
             combined_output = torch.cat((autoformer_output, static_output), dim=-1)
-            
+            print ("shape of combined_output:", combined_output.shape)
+
 
             self.dimension_match(combined_output)
         return self.dimension_match(combined_output)

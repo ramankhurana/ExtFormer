@@ -80,8 +80,8 @@ class Model(nn.Module):
             self.static_raw = self.static_raw.float()
 
 
-
-            n_input = 1000
+            print ("n_input ------------------------------", self.static_raw.shape[2])
+            n_input = self.static_raw.shape[2]
             self.autoformer_output_dim = n_input
             self.static_output_dim = n_input
             self.static_embeding = StaticEmbedding(n_input) 

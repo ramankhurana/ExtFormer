@@ -66,7 +66,8 @@ class Model(nn.Module):
             #self.static_raw = self.static_raw.repeat((32,96,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
             #self.static_raw = self.static_raw.permute(0, 2, 1)
-            n_input = 1000
+            print ("n_input: ----------------------",self.static_raw.shape[2])
+            n_input = self.static_raw.shape[2]
             self.DLinear_output_dim = n_input
             self.static_output_dim = n_input
             ## model 

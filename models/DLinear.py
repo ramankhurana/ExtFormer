@@ -34,7 +34,7 @@ class Model(nn.Module):
         self.static6    = configs.static=="static6"
         self.static7    = configs.static=="static7"
         self.data       = configs.data 
-        
+
         print ("self.static1, self.static2, self.static4, self.static6, self.static7", self.static1, self.static2, self.static4, self.static6, self.static7)
 
         ## Raman code starts
@@ -47,7 +47,7 @@ class Model(nn.Module):
             if self.data == "Divvy":
                 self.static_raw = torch.tensor(np.load('auxutils/divvy_static.npy').tolist() )  ## static real data for Divvy Bikes
             if self.data == "M5":  
-                    self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
+                self.static_raw = torch.tensor(np.load('auxutils/M5_static.npy')[1].tolist() )  ## static real data for Divvy Bikes
 
             #static_raw = static_raw.repeat((32,72,1))   ## for input it should 96, for output it should be 144
             #static_raw = static_raw.repeat((32,144,1))  # for Auto and FED former  ## for input it should 96, for output it should be 144 
@@ -56,7 +56,8 @@ class Model(nn.Module):
             self.static_raw = self.static_raw.repeat((32,self.pred_len,1))   ## for DLinear for input it should 96, for output it should be 144 
             self.static_raw = self.static_raw.float()
             self.static_raw = self.static_raw.permute(0, 2, 1)
-            n_input = 1000
+
+            n_input = self.static_raw.shape[1]
             self.DLinear_output_dim = n_input
             self.static_output_dim = n_input
             ## model 
@@ -157,6 +158,7 @@ class Model(nn.Module):
             static_out =   self.static_raw
             seasonal_part_orig = seasonal_part  
             seasonal_part = self.combiner(seasonal_part.permute(0,2,1), static_out.permute(0,2,1)) 
+            print ("shape of seasonal part in static 7: ", seasonal_part.shape) 
             seasonal_part = self.static_embeding(seasonal_part)
             seasonal_part = seasonal_part_orig + seasonal_part.permute(0,2,1)
             seasonal_output = seasonal_part
