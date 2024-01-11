@@ -16,7 +16,8 @@ The codebase is motivated from Time Series Analysis (developer of TimesNet).
 ## To do for next version
 - add boolean for the static variables
 - add static data in the image OR mounted on the dataset pvc
-- change the static module such that it takes seq and pred length instead of 96
+- setup the githu CI/CD to create the docker container and push to dockerhub
+
 
 
 # create docker container

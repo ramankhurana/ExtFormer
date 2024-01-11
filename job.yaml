@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: extformer-job
+  namespace: kafka-flink
+spec:
+  template:
+    metadata:
+      labels:
+        app: extformer
+    spec:
+      containers:
+        - name: extformer
+          image: extformer-image:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "11Gi"
+              cpu: "3"
+            limits:
+              memory: "12Gi"
+              cpu: "4"
+          env:
+            - name: SCRIPT_NAME
+              value: "Autoformer_M5.sh"
+          volumeMounts:
+            - name: dataset-volume
+              mountPath: /nfs/home/khurana/dataset
+            - name: dshm
+              mountPath: /dev/shm
+      volumes:
+        - name: dataset-volume
+          persistentVolumeClaim:
+            claimName: extformer-pvc
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "3Gi"
+      restartPolicy: Never
+  backoffLimit: 0
