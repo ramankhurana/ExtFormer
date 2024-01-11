@@ -7,7 +7,7 @@ python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
   --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
-  --data_path sales_1000_Random_columns.csv \
+  --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_12_12 \
   --model $model_name \
   --data Divvy \
@@ -31,7 +31,7 @@ python -u run.py \
   --task_name long_term_forecast \
   --is_training 1 \
   --root_path /nfs/home/khurana/dataset/DivvyBikes/ \
-  --data_path sales_1000_Random_columns.csv \
+  --data_path df2021-8-9-10_VAR_nextdayAshrdata.csv \
   --model_id Divvy_12_12 \
   --model $model_name \
   --data Divvy \
