@@ -36,13 +36,25 @@ docker tag extformer-image:latest ramankhurana/extformer-image:latest
 docker push ramankhurana/extformer-image:latest
 
 
-# run the kubernetes job
+
+
+# On K8 cluster
+
+Once git push is successful, github actions will create the docker image and push it to the docker hub.
+
+This new image should be used for setting up the jobs now. New image always have two tags: latest and a version number. Therefore latest will always give the recent one. To get an older version look for the exact version number.
+
+Since docker image is pulled from the dockerhub, there is actually no need to update the main codebase in k8 cluster area. In future the k8 setup and the main code base can be sperated for convinence.
+
+The dataset has be loaded to the /nfs area in the k8 cluster in order the jobs can access those data files.
+
+### run the kubernetes job
 kubectl apply -f job.yaml
 
-# run all the jobs; one job for each shell script
+### run all the jobs; one job for each shell script
 source jobs-all.sh
 
 
 #
-# delete the batch jobs before submitting them again
+### delete the batch jobs before submitting them again
 

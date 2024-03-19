@@ -757,8 +757,11 @@ class Dataset_divvy_hour(Dataset):
         df_raw = pd.read_csv(os.path.join(self.root_path,
                                           self.data_path))
 
-        border1s = [0,         56 * 24 - self.seq_len,    56* 24 + 4 * 24 - self.seq_len]
-        border2s = [56 * 24,   56 * 24 + 2* 4 * 24,          56 * 24 + 24 * 24]
+        border1s = [0,         4 * 56 * 24 - self.seq_len,    4 * 56* 24 + 4 * 24 - self.seq_len]
+        border2s = [4 * 56 * 24,   4 * 56 * 24 + 2* 2* 4 * 24,          4* 56 * 24 + 2* 24 * 24]
+        #border1s = [0,         56 * 24 - self.seq_len,    56* 24 + 4 * 24 - self.seq_len]
+        #border2s = [56 * 24,   56 * 24 + 2* 4 * 24,          56 * 24 + 24 * 24]
+
         border1 = border1s[self.set_type]
         border2 = border2s[self.set_type]
 
